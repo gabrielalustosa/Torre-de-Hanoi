@@ -2,7 +2,7 @@ from collections import deque
 
 def hanoi_width(n):
     # Gera os possíveis estados
-    def get_moves(state):
+    def getmoves(state):
         moves = []
         for i in range(3):
             if state[i]:
@@ -14,31 +14,33 @@ def hanoi_width(n):
                         moves.append(new_state)
         return moves
 
-    def is_goal(state):
+    def checkgoal(state):
+        # Verifica se o estado atual é o objetivo
         return state[2] == list(range(n, 0, -1))
 
-    initial_state = [list(range(n, 0, -1)), [], []]
+    initial_state = [list(range(n, 0, -1)), [], []] # Estado inicial 
     queue = deque([initial_state])
     visited = set()
-    visited.add(tuple(map(tuple, initial_state)))
-    parent = {tuple(map(tuple, initial_state)): None}
+    visited.add(tuple(map(tuple, initial_state))) # tuple de estados já visitados
+    parent = {tuple(map(tuple, initial_state)): None} # Variável pai que armazena os estados para exibição
 
-    while queue:
+    while queue: # loop de busca
         current = queue.popleft()
-        if is_goal(current):
+        if checkgoal(current):
             path = []
             while current:
                 path.append(current)
                 current = parent[tuple(map(tuple, current))]
-            return path[::-1]
+            return path[::-1] # Inverte o caminho para ordem cronológica
 
-        for move in get_moves(current):
+        for move in getmoves(current):
             move_tuple = tuple(map(tuple, move))
             if move_tuple not in visited:
                 queue.append(move)
                 visited.add(move_tuple)
-                parent[move_tuple] = current
+                parent[move_tuple] = current # Salva o estado no pai, e avança o estado atual
 
-solution = hanoi_width(5)
+# Execução teste
+solution = hanoi_width(9)
 for step in solution:
     print(step)
